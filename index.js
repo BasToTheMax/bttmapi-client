@@ -32,12 +32,12 @@ class Client {
     async saveServers() {
         var servers = await rp('https://raw.githubusercontent.com/BasToTheMax/bttmapi-client/main/serverlist.json');
         fs.writeFileSync(`${__dirname}/servers.json`, JSON.stringify(servers));
-        console.log(`\tSaved all servers`);
+        console.log(chalk.green(`\tSaved all servers`));
     }
 
     getServer() {
         if (this.servers.length == 0) {
-            console.log(`\tAll servers failed. Re-trying...`);
+            console.log(chalk.red(`\tAll servers failed. Re-trying...`));
             this.servers = this.oldServers;
         }
         var server = this.servers[Math.floor(Math.random() * this.servers.length)];
@@ -77,9 +77,8 @@ class Client {
             this.removeServer();
             this.server = null;
 
-            console.log(`\tServer "${this.server}" is down, trying on another server...`);
+            console.log(chalk.yellow(`\tServer "${this.server}" is down, trying on another server...`));
             if (this.fails[`${method}.${path}.${body}.${params}`] == null || this.fails[`${method}.${path}.${body}.${params}`] == undefined || this.fails[`${method}.${path}.${body}.${params}`] == NaN) {
-                console.log(`\tFail count not found for ${path}`);
                 this.fails[`${method}.${path}.${body}.${params}`] = 0;
             }
             this.fails[`${method}.${path}.${body}.${params}`]++;
@@ -92,7 +91,6 @@ class Client {
 
             console.log(`\tServer "${this.server}" is ratelimited, trying on another server...`);
             if (this.fails[`${method}.${path}.${body}.${params}`] == null || this.fails[`${method}.${path}.${body}.${params}`] == undefined || this.fails[`${method}.${path}.${body}.${params}`] == NaN) {
-                console.log(`\tFail count not found for ${path}`);
                 this.fails[`${method}.${path}.${body}.${params}`] = 0;
             }
             this.fails[`${method}.${path}.${body}.${params}`]++;
