@@ -1,5 +1,6 @@
 var rp = require('request-promise');
 var fs = require('fs');
+var chalk = require('chalk');
 
 class Client {
     constructor(key, servers, scheme) {
