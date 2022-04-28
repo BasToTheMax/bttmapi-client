@@ -32,7 +32,7 @@ class Client {
 
     async saveServers() {
         var servers = await rp('https://raw.githubusercontent.com/BasToTheMax/bttmapi-client/main/serverlist.json');
-        fs.writeFileSync(`${__dirname}/servers.json`, JSON.stringify(servers));
+        fs.writeFileSync(`${__dirname}/servers.json`, servers);
         console.log(chalk.green(`\tSaved all servers`));
     }
 
