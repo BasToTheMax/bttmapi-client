@@ -1,4 +1,5 @@
 var rp = require('request-promise');
+var fs = require('fs');
 
 class Client {
     constructor(key, servers, scheme) {
@@ -6,7 +7,14 @@ class Client {
             return this.error('ERR_NO_KEY', "You didn't provide any key!");
         }
         if (!servers) {
-            servers = ['bttmapi1.bastothemax.nl'];
+            if (fs.existsSync(`${__dirname}/servers.json`)) {
+                servers = JSON.parse(fs.readFileSync(`${__dirname}/servers.json`).toString())
+            } else {
+                servers = [
+                    'bttmapi1.bastothemax.nl'
+                ];
+                this.saveServers();
+            }
         }
         if (!scheme) {
             scheme = 'https';
@@ -21,9 +29,15 @@ class Client {
         this.fails = {};
     }
 
+    async saveServers() {
+        var servers = await rp('https://raw.githubusercontent.com/BasToTheMax/bttmapi-client/main/serverlist.json');
+        fs.writeFileSync(`${__dirname}/servers.json`, JSON.stringify(servers));
+        console.log(`\tSaved all servers`);
+    }
+
     getServer() {
         if (this.servers.length == 0) {
-            console.log();
+            console.log(`\tAll servers failed. Re-trying...`);
             this.servers = this.oldServers;
         }
         var server = this.servers[Math.floor(Math.random() * this.servers.length)];
@@ -55,7 +69,7 @@ class Client {
             resolveWithFullResponse: true
         });
 
-        console.log(res.statusCode/*, res.body*/);
+        // console.log(res.statusCode, res.body);
         var status = res.statusCode;
 
         if (status == 200) return JSON.parse(res.body);
