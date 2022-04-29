@@ -8,13 +8,12 @@ class Client {
             return this.error('ERR_NO_KEY', "You didn't provide any key!");
         }
         if (!servers) {
-            if (fs.existsSync(`${__dirname}/servers.json`)) {
-                servers = JSON.parse(fs.readFileSync(`${__dirname}/servers.json`).toString())
+            if (fs.existsSync(`${__dirname}/serverlist.json`)) {
+                servers = JSON.parse(fs.readFileSync(`${__dirname}/serverlist.json`).toString())
             } else {
                 servers = [
                     'bttmapi1.bastothemax.nl'
                 ];
-                this.saveServers();
             }
         }
         if (!scheme) {
@@ -28,12 +27,6 @@ class Client {
         
         this.server = null;
         this.fails = {};
-    }
-
-    async saveServers() {
-        var servers = await rp('https://raw.githubusercontent.com/BasToTheMax/bttmapi-client/main/serverlist.json');
-        fs.writeFileSync(`${__dirname}/servers.json`, servers);
-        console.log(chalk.green(`\tSaved all servers`));
     }
 
     getServer() {
