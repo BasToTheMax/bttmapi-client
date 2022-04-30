@@ -64,7 +64,11 @@ class Client {
         // console.log(res.statusCode, res.body);
         var status = res.statusCode;
 
-        if (status == 200) return JSON.parse(res.body);
+        if (status == 200) {
+            var body = JSON.parse(res.body);
+            body.server = this.server;
+            return body;
+        }
         else if (status == 502) {
             this.removeServer();
             this.server = null;
