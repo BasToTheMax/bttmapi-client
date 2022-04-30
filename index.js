@@ -11,9 +11,7 @@ class Client {
             if (fs.existsSync(`${__dirname}/serverlist.json`)) {
                 servers = JSON.parse(fs.readFileSync(`${__dirname}/serverlist.json`).toString())
             } else {
-                servers = [
-                    'bttmapi1.bastothemax.nl'
-                ];
+                this.error('ERR_NO_SERVERLIST', chalk.red(`"serverlist.json" not found. Aborting...`))
             }
         }
         if (!scheme) {
